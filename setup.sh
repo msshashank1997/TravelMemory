@@ -1,5 +1,7 @@
 #!/bin/bash
 
+LB_DNS=$1
+
 # Update system packages
 yum update -y
 
@@ -19,20 +21,16 @@ systemctl enable nginx
 
 # Clone repository
 cd /opt
-git clone https://github.com/yourusername/travel-memory.git
+git clone https://github.com/msshashank1997/travel-memory.git
 cd travel-memory
 
 # Setup backend
-cd backend
+cd travel-memory/backend
 cp .env.example .env
 # Update .env file with necessary configurations
 cat > .env << EOF
-PORT=3000
-DB_HOST=your-db-host
-DB_USER=your-db-user
-DB_PASSWORD=your-db-password
-DB_NAME=your-db-name
-NODE_ENV=production
+MONGO_URI='mongodb+srv://demoteam88:3WwsOsXTmCfG1PLE@cluster0.gdzal.mongodb.net/travelmemory'
+PORT=3001
 EOF
 
 # Install dependencies and start the backend
@@ -44,7 +42,7 @@ pm2 start index.js --name "travel-memory-backend"
 cd ../frontend
 # Update URL configuration
 cat > src/utils/urls.js << EOF
-const BACKEND_URL = 'http://your-load-balancer-url/api';
+const BACKEND_URL = 'http://${LB_DNS}/api';
 export default BACKEND_URL;
 EOF
 
