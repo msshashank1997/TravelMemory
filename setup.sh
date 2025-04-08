@@ -29,7 +29,7 @@ cd travel-memory/backend
 cp .env.example .env
 # Update .env file with necessary configurations
 cat > .env << EOF
-MONGO_URI='mongodb+srv://demoteam88:3WwsOsXTmCfG1PLE@cluster0.gdzal.mongodb.net/travelmemory'
+MONGO_URI='mongodb+srv://username:password@cluster0.gdzal.mongodb.net/dbname'
 PORT=3001
 EOF
 
