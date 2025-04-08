@@ -6,7 +6,7 @@ LB_DNS=$1
 yum update -y
 
 # Install Node.js
-curl -sL https://rpm.nodesource.com/setup_14.x | bash -
+curl -sL https://rpm.nodesource.com/setup_20.x | bash -
 yum install -y nodejs
 
 # Install Git
