@@ -1,0 +1,55 @@
+server {
+        listen 80;
+        server_name _;  # Wildcard to match any domain
+        
+        access_log /var/log/nginx/access.log;
+        error_log /var/log/nginx/error.log debug;  # Increased logging level
+        
+        location /favicon.ico {
+            access_log off;
+            log_not_found off;
+        }
+
+        # Proxy all frontend requests to the local development server
+        location / {
+            proxy_pass http://localhost:3000;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade \$http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host \$host;
+            proxy_set_header X-Real-IP \$remote_addr;
+            proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+            proxy_cache_bypass \$http_upgrade;
+            
+            # Add timeouts
+            proxy_connect_timeout 300s;
+            proxy_send_timeout 300s;
+            proxy_read_timeout 300s;
+        }
+
+        # API requests go to the backend
+        location /api {
+            proxy_pass http://localhost:3001;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade \$http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host \$host;
+            proxy_set_header X-Real-IP \$remote_addr;
+            proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+            proxy_cache_bypass \$http_upgrade;
+            
+            # Add timeouts to prevent 503 errors 
+            proxy_connect_timeout 300s;
+            proxy_send_timeout 300s;
+            proxy_read_timeout 300s;
+            
+            # Show custom error when backend is down
+            proxy_intercept_errors on;
+            error_page 502 503 504 /50x.html;
+        }
+        
+        # Custom error page
+        location = /50x.html {
+            root /usr/share/nginx/html;
+        }
+}
