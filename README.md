@@ -18,6 +18,7 @@ This project automates the deployment of a full-stack application (Node.js backe
    cd yourrepo
    ```
 
+
 2. Install required Python packages:
    
    ```
@@ -41,6 +42,8 @@ This project automates the deployment of a full-stack application (Node.js backe
    - Set up a load balancer across multiple availability zones
    - Install and configure the Node.js backend and React frontend on each instance
    - Configure Nginx as a reverse proxy
+
+     ![deployment-script-output](https://github.com/user-attachments/assets/9c2ca5ab-e06f-4a8d-a94a-175e29074fe8)
 
 ## Cloudflare Configuration
 
@@ -69,6 +72,8 @@ After your AWS infrastructure is set up, you can configure Cloudflare to point y
   - **DNS Management**: Routes domain name to load balancer
   - **CDN**: Caches static content at edge locations
   - **Security**: Provides DDoS protection, WAF, and SSL
+
+      ![Untitled Diagram drawio](https://github.com/user-attachments/assets/c900bec1-ed38-479b-88ba-92f5e0f473db)
 
 ## Maintenance
 
