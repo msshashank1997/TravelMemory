@@ -2,7 +2,7 @@ import boto3
 import os
 from botocore.exceptions import ClientError
 
-def create_vpc(ec2_client, cidr_block='10.0.0.0/16'):
+def create_vpc(ec2_client, cidr_block='172.31.0.0/16'):
     try:
         # Create VPC
         response = ec2_client.create_vpc(CidrBlock=cidr_block)
