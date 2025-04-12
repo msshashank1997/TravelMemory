@@ -57,10 +57,7 @@ After your AWS infrastructure is set up, you can configure Cloudflare to point y
      - Target: Your AWS load balancer DNS (e.g., `fullstack-app-lb-123456789.ap-south-1.elb.amazonaws.com`)
      - Proxy status: Proxied (for Cloudflare benefits)
 
-2. **SSL/TLS Configuration**:
-   - Go to the SSL/TLS section in Cloudflare
-   - Set SSL/TLS encryption mode to "Full" or "Full (strict)"
-   - Enable "Always Use HTTPS" to redirect HTTP to HTTPS
+         ![dnsoutput](https://github.com/user-attachments/assets/470424e5-7b9b-4474-958f-f0206c320054)
 
 ## Application Architecture
 
