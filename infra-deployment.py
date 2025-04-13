@@ -167,13 +167,6 @@ EOF
 
     # Restart NGINX to apply changes
     sudo systemctl restart nginx
-
-    sudo apt-get update
-    sudo apt-get install snapd
-    sudo snap install --classic certbot
-    sudo ln -s /snap/bin/certbot /usr/bin/certbot
-    sudo nginx -t
-    sudo systemctl restart nginx
     '''
         
         instances = ec2_resource.create_instances(
