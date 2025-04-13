@@ -5,10 +5,50 @@ This project automates the deployment of a full-stack application (Node.js backe
 ## Prerequisites
 
 - AWS account with appropriate permissions
-- Python 3.6+ installed
+- Python 3.9+ installed
 - Boto3 installed (`pip install boto3`)
 - AWS credentials configured (`aws configure`)
 - Cloudflare account (for custom domain)
+
+## MongoDB Setup
+
+To use MongoDB as your database, follow these steps to create a free online MongoDB database:
+
+1. Create a MongoDB Atlas Account:
+   - Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
+   - Sign up for a free account or log in if you already have one.
+
+2. Create a New Cluster:
+   - After logging in, click on "Build a Cluster."
+   - Select the free tier (shared cluster) and choose your preferred cloud provider and region.
+   - Click "Create Cluster."
+
+3. Set Up Database Access:
+   - Go to the "Database Access" tab.
+   - Click "Add New Database User."
+   - Create a username and password for your database user. Make sure to save these credentials for later use.
+
+4. Set Up Network Access:
+   - Go to the "Network Access" tab.
+   - Click "Add IP Address."
+   - Add your IP address or select "Allow Access from Anywhere" (0.0.0.0/0) for development purposes.
+
+5. Create a Database:
+   - Once your cluster is ready, click "Browse Collections."
+   - Click "Add My Own Data."
+   - Enter a database name (e.g., `travelMemoryDB`) and a collection name (e.g., `users`).
+   - Click "Create."
+
+6. Connect to Your Database:
+   - Go to the "Clusters" tab and click "Connect."
+   - Choose "Connect Your Application."
+   - Copy the connection string (e.g., `mongodb+srv://<username>:<password>@cluster0.mongodb.net/<dbname>?retryWrites=true&w=majority`).
+   - Replace `<username>`, `<password>`, and `<dbname>` with your database user credentials and database name.
+
+7. Update Your Application:
+   - In your application code (e.g., `infra-deployment.py` or environment variables), update the MongoDB connection string with the one you copied.
+
+Now your MongoDB database is ready to use with your application!
 
 ## Setup Instructions
 
