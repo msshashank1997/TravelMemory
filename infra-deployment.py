@@ -1,27 +1,7 @@
 import boto3
+import time
 import os
 from botocore.exceptions import ClientError
-
-def create_vpc(ec2_client, cidr_block='172.31.0.0/16'):
-    try:
-        # Create VPC
-        response = ec2_client.create_vpc(CidrBlock=cidr_block)
-        vpc_id = response['Vpc']['VpcId']
-        print(f"VPC created with ID: {vpc_id}")
-        
-        # Enable DNS support and DNS hostnames
-        ec2_client.modify_vpc_attribute(VpcId=vpc_id, EnableDnsSupport={'Value': True})
-        ec2_client.modify_vpc_attribute(VpcId=vpc_id, EnableDnsHostnames={'Value': True})
-        
-        # Create a name tag for the VPC
-        ec2_client.create_tags(
-            Resources=[vpc_id],
-            Tags=[{'Key': 'Name', 'Value': 'FullStackApp-VPC'}]
-        )
-        return vpc_id
-    except Exception as e:
-        print(f"Error creating VPC: {e}")
-        return None
 
 def create_security_group(ec2_client, vpc_id, name, description):
     try:
@@ -97,17 +77,15 @@ def create_instances(ec2_resource, security_group_id, key_name, count=2, instanc
     sudo apt install -y nginx git curl build-essential
 
     # Install Node.js (LTS) and npm
-    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo bash -
-    sudo apt-get install -y nodejs
-    sudo apt-get install -y npm
-    sudo npm install -g npm@11.3.0
+    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+    sudo apt install -y nodejs npm
 
     # Install PM2 globally
     sudo npm install -g pm2
 
     # Clone the TravelMemory repo
     cd /home/ubuntu
-    git clone https://github.com/username/TravelMemory.git
+    git clone https://github.com/msshashank1997/TravelMemory.git
     cd TravelMemory
 
     # ------------------------
@@ -216,7 +194,7 @@ def create_load_balancer(client, name, subnets, security_group_id, instances):
             Port=80,
             VpcId=instances[0].vpc_id,
             HealthCheckProtocol='HTTP',
-            HealthCheckPath='/api',  # Updated health check path
+            HealthCheckPath='/',
             TargetType='instance'
         )
         target_group_arn = response['TargetGroups'][0]['TargetGroupArn']
@@ -264,38 +242,15 @@ def main():
     ec2_resource = boto3.resource('ec2', region_name='ap-south-1')
     elbv2_client = boto3.client('elbv2', region_name='ap-south-1')
     
-    # Create VPC
-    vpc_id = create_vpc(ec2_client)
-    if not vpc_id:
-        print("Failed to create VPC. Exiting.")
-        return
+    # Get VPC ID
+    response = ec2_client.describe_vpcs()
+    vpc_id = response['Vpcs'][0]['VpcId']
     
-    # Get subnet IDs from different Availability Zones
+    # Get subnet IDs
     response = ec2_client.describe_subnets(
         Filters=[{'Name': 'vpc-id', 'Values': [vpc_id]}]
     )
-
-    # Group subnets by Availability Zone
-    subnets_by_az = {}
-    for subnet in response['Subnets']:
-        az = subnet['AvailabilityZone']
-        subnet_id = subnet['SubnetId']
-        if az not in subnets_by_az:
-            subnets_by_az[az] = []
-        subnets_by_az[az].append(subnet_id)
-
-    # Select one subnet from each Availability Zone
-    subnet_ids = []
-    for az, subnet_list in subnets_by_az.items():
-        if subnet_list:
-            subnet_ids.append(subnet_list[0])
-        if len(subnet_ids) >= 2:  # We need at least 2 subnets
-            break
-
-    # Check if we have enough subnets from different AZs
-    if len(subnet_ids) < 2:
-        print("Error: Need at least 2 subnets in different Availability Zones")
-        return
+    subnet_ids = [subnet['SubnetId'] for subnet in response['Subnets'][:2]]
     
     # Create or get existing security group
     security_group_id = create_security_group(
