@@ -18,7 +18,6 @@ This project automates the deployment of a full-stack application (Node.js backe
    cd yourrepo
    ```
 
-
 2. Install required Python packages:
    
    ```
@@ -34,6 +33,8 @@ This project automates the deployment of a full-stack application (Node.js backe
    python infra-deployment.py
    ```
 
+   > **Note**: Once the deployment is successful, please wait for **10 to 20 minutes** to allow the system to fully configure and be ready for use.
+
 5. The script will:
    - Create a VPC with necessary network settings
    - Create a security group with HTTP, HTTPS, and SSH access
@@ -42,8 +43,10 @@ This project automates the deployment of a full-stack application (Node.js backe
    - Set up a load balancer across multiple availability zones
    - Install and configure the Node.js backend and React frontend on each instance
    - Configure Nginx as a reverse proxy
-
+  
      ![deployment-script-output](https://github.com/user-attachments/assets/9c2ca5ab-e06f-4a8d-a94a-175e29074fe8)
+
+     ![loadbalnceroutput](https://github.com/user-attachments/assets/e9cb84b2-3e77-4f3c-95fb-9044eb5ef094)
 
 ## Cloudflare Configuration
 
@@ -83,7 +86,7 @@ After your AWS infrastructure is set up, you can configure Cloudflare to point y
 
 The deployment creates multiple instances by default. To adjust the number of instances:
 
-1. Modify the `count` parameter in the `create_instances` function call in `deploy.py`
+1. Modify the `count` parameter in the `create_instances` function call in `infra-deployment.py`
 2. Run the deployment script again
 
 ## Troubleshooting
