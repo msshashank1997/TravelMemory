@@ -100,7 +100,9 @@ After your AWS infrastructure is set up, you can configure Cloudflare to point y
      - Target: Your AWS load balancer DNS (e.g., `fullstack-app-lb-123456789.ap-south-1.elb.amazonaws.com`)
      - Proxy status: Proxied (for Cloudflare benefits)
 
-         ![dnsoutput](https://github.com/user-attachments/assets/470424e5-7b9b-4474-958f-f0206c320054)
+       ![cloudflareconfig](https://github.com/user-attachments/assets/a52f631e-314b-4ba2-a2b3-806f6790381d)
+
+       ![dnsoutput](https://github.com/user-attachments/assets/470424e5-7b9b-4474-958f-f0206c320054)
 
 ## Application Architecture
 
@@ -110,8 +112,6 @@ After your AWS infrastructure is set up, you can configure Cloudflare to point y
 - **Load Balancer**: Distributes traffic across multiple EC2 instances
 - **Cloudflare**: Provides DNS management, CDN, and security
   - **DNS Management**: Routes domain name to load balancer
-  - **CDN**: Caches static content at edge locations
-  - **Security**: Provides DDoS protection, WAF, and SSL
 
       ![Untitled Diagram drawio](https://github.com/user-attachments/assets/c900bec1-ed38-479b-88ba-92f5e0f473db)
 
