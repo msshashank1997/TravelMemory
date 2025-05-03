@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import requests
 import sys
@@ -6,7 +8,8 @@ import time
 # Configuration
 REPO_OWNER = "msshashank1997"  # Replace with your GitHub username
 REPO_NAME = "TravelMemory"     # Replace with your repository name
-GITHUB_TOKEN = "PAT"              # Optional for public repos, helps avoid rate limits
+# Get token from environment variable or use None
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 LAST_COMMIT_FILE = "last_commit.txt"
 
 def get_latest_commit():
@@ -14,11 +17,12 @@ def get_latest_commit():
     url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/commits"
     headers = {"Accept": "application/vnd.github.v3+json"}
     
-    # For public repos, token is optional but helps avoid rate limits
-    if GITHUB_TOKEN:
-        headers["Authorization"] = f"token {GITHUB_TOKEN}"
+    # Only add Authorization if we have a valid token (not a placeholder)
+    #if GITHUB_TOKEN and GITHUB_TOKEN != "PAT":
+        #headers["Authorization"] = f"token {GITHUB_TOKEN}"
     
     try:
+        print(f"Fetching commits from {url}")
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         commits = response.json()
@@ -27,6 +31,9 @@ def get_latest_commit():
         return None
     except requests.RequestException as e:
         print(f"Error fetching commits: {e}")
+        if hasattr(e, 'response') and e.response:
+            print(f"Response status: {e.response.status_code}")
+            print(f"Response body: {e.response.text}")
         return None
 
 def get_stored_commit():
@@ -61,4 +68,6 @@ def main():
         return False
 
 if __name__ == "__main__":
-    main()
+    result = main()
+    # Exit with appropriate status code for automation
+    sys.exit(0 if result else 1)
